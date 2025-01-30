@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Stock Ticker</title>
+</head>
+<body>
+  <h1>Live Stock Prices</h1>
+  <div id="stocks"></div>
+
+  <script>
+    // Connect to the server-side event stream
+    const eventSource = new EventSource('http://localhost:3000/events');
+
+    eventSource.onmessage = function(event) {
+      // Parse the incoming stock prices and display them
+      const stockPrices = JSON.parse(event.data);
+      let displayText = "<ul>";
+      for (let symbol in stockPrices) {
+        displayText += `<li>${symbol}: $${stockPrices[symbol].toFixed(2)}</li>`;
+      }
+      displayText += "</ul>";
+      document.getElementById('stocks').innerHTML = displayText;
+    };
+  </script>
+</body>
+</html>
